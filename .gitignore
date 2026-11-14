@@ -1,0 +1,41 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+
+# env files
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# copy-paste setup/update scripts (generated, large)
+/ecommerce-template-share/
+
+# local data store and uploads (src/server/db.ts)
+/.data/
+
+# moved-aside files from sync-ecommerce-template.mjs
+/.sync-backup/

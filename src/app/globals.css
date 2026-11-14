@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+/* Dark mode is driven by the `dark` class on <html> (set by the theme switcher). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Neutral colors for light and dark mode. Brand colors (--primary, --accent, --grad-*)
+ * come from src/config/theme.ts. Change these to restyle backgrounds, cards and text.
+ */
+:root {
+  --bg: #fbfaff;
+  --surface: #ffffff;
+  --surface-2: #f3f1fa;
+  --fg: #17142a;
+  --fg-muted: #625c7a;
+  --border: #e6e2f0;
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #e11d48;
+  /* --radius is set from src/config/theme.ts */
+
+  /* Fallback palette until the boot script runs. */
+  --primary: #7c3aed;
+  --primary-fg: #ffffff;
+  --accent: #f43f5e;
+  --accent-fg: #ffffff;
+  --grad-1: #7c3aed;
+  --grad-2: #db2777;
+  --grad-3: #f97316;
+  /* Brand colors used as text. In dark mode they are lightened so they stay readable. */
+  --primary-ink: var(--primary);
+  --accent-ink: var(--accent);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #0e0c18;
+  --surface: #17142a;
+  --surface-2: #211d38;
+  --fg: #f3f1fb;
+  --fg-muted: #a7a1c0;
+  --border: #2e2948;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --primary-ink: color-mix(in oklab, var(--primary) 55%, white);
+  --accent-ink: color-mix(in oklab, var(--accent) 60%, white);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-ink: var(--primary-ink);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-ink: var(--accent-ink);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+  --color-grad-1: var(--grad-1);
+  --color-grad-2: var(--grad-2);
+  --color-grad-3: var(--grad-3);
+  --radius-theme: var(--radius);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Reusable building blocks. Edit here to restyle every button or card at once. */
+@utility container-x {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+@utility card {
+  @apply rounded-theme border border-border bg-surface;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-theme px-5 py-2.5 text-sm font-semibold transition
+    focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
+    disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-primary text-primary-fg shadow-lg shadow-primary/30 hover:-translate-y-px hover:shadow-xl hover:shadow-primary/40
+    hover:brightness-110 active:translate-y-0 active:scale-[0.98];
+}
+@utility btn-accent {
+  @apply btn bg-accent text-accent-fg shadow-lg shadow-accent/30 hover:-translate-y-px hover:shadow-xl hover:shadow-accent/40
+    hover:brightness-110 active:translate-y-0 active:scale-[0.98];
+}
+@utility btn-outline {
+  @apply btn border border-border bg-surface text-fg hover:border-primary hover:bg-primary/5 hover:text-primary-ink;
+}
+@utility btn-ghost {
+  @apply btn text-fg hover:bg-surface-2;
+}
+/* White button for use on gradients and dark banners; text stays dark in both modes. */
+@utility btn-light {
+  @apply btn bg-white text-slate-900 shadow-lg shadow-black/10 hover:-translate-y-px hover:bg-white/90 active:translate-y-0;
+}
+@utility input {
+  @apply w-full rounded-theme border border-border bg-surface px-3.5 py-2.5 text-sm text-fg placeholder:text-fg-muted
+    focus:border-primary focus:outline-none focus:ring-4 focus:ring-primary/15;
+}
+@utility label {
+  @apply mb-1.5 block text-sm font-medium text-fg;
+}
+@utility chip {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold;
+}
+@utility text-gradient {
+  @apply bg-linear-to-r from-grad-1 via-grad-2 to-grad-3 bg-clip-text text-transparent;
+}
+@utility bg-brand-gradient {
+  @apply bg-linear-to-br from-grad-1 via-grad-2 to-grad-3;
+}
+
+[data-announcement-closed] .announcement-bar {
+  display: none;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-pop {
+  animation: pop-in 0.16s ease-out;
+  transform-origin: top;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(2deg);
+  }
+}
+
+.animate-toast {
+  animation: toast-in 0.25s ease-out;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
