@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { siteConfig } from "@/config/site";
 import { useStore } from "@/components/providers/store-provider";
 import { CartIcon, CloseIcon, HeartIcon, MenuIcon, SearchIcon } from "@/components/icons";
@@ -50,7 +50,20 @@ export function Header() {
   const pathname = usePathname();
   const count = cart.reduce((s, l) => s + l.qty, 0);
 
+  // Escape closes the menu; lock page scroll while it is open.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   return (
+    <>
     <header className="sticky top-0 z-40 border-b border-border bg-bg/80 backdrop-blur-xl">
       <div className="container-x flex h-16 items-center gap-4">
         <button
@@ -103,11 +116,13 @@ export function Header() {
           </button>
         </div>
       </div>
+    </header>
 
+      {/* Outside <header>: its backdrop-blur would make it the containing block for this fixed overlay. */}
       {menuOpen && (
         <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
-          <div className="absolute inset-y-0 left-0 flex w-80 max-w-[85vw] flex-col gap-6 bg-surface p-5 shadow-2xl">
+          <div className="absolute inset-y-0 left-0 flex w-80 max-w-[85vw] flex-col gap-6 overflow-y-auto bg-surface p-5 shadow-2xl">
             <div className="flex items-center justify-between">
               <Logo />
               <button type="button" className="btn-ghost h-10 w-10 p-0" onClick={() => setMenuOpen(false)} aria-label="Close menu">
@@ -136,6 +151,6 @@ export function Header() {
           </div>
         </div>
       )}
-    </header>
+    </>
   );
 }
